@@ -6,6 +6,6 @@ namespace ItemListTemplate.Repositories
 {
     public interface IItemRepository : IGenericRepository<Item>
     {
-        Task<ResponseItemsDto> GetItems(PaginationParams request);
+        //Task<PaginatedResult<Item>> GetItems(PaginationParams request);
     }
 }

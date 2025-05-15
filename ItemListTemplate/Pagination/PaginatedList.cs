@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace ItemListTemplate.Models
+namespace ItemListTemplate.Pagination
 {
     public class PaginatedList<T> : List<T>
     {

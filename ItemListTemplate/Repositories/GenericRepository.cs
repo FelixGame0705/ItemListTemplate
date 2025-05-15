@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using ItemListTemplate.Pagination;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,16 +30,34 @@ namespace ItemListTemplate.Repositories
 
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
 
-        public async Task<PaginatedResult<T>> GetPagedAsync(PaginationParams paging)
+        public async Task<PaginatedResult<T>> GetPagedAsync(
+            PaginationParams paging,
+            Expression<Func<T, bool>>? filter = null,
+            List<Expression<Func<T, object>>>? includes = null
+        )
         {
             var query = _dbSet.AsQueryable();
 
-            // Optional: apply default sorting
+            if (filter != null)
+                query = query.Where(filter);
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
             if (!string.IsNullOrEmpty(paging.SortBy))
             {
-                query = paging.IsDescending
-                    ? query.OrderByDescending(e => EF.Property<object>(e, paging.SortBy))
-                    : query.OrderBy(e => EF.Property<object>(e, paging.SortBy));
+                var prop = typeof(T).GetProperty(paging.SortBy);
+                if (prop != null)
+                {
+                    query = paging.IsDescending
+                        ? query.OrderByDescending(e => EF.Property<object>(e, paging.SortBy))
+                        : query.OrderBy(e => EF.Property<object>(e, paging.SortBy));
+                }
             }
 
             var count = await query.CountAsync();

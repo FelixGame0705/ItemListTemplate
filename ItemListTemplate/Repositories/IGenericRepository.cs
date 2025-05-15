@@ -1,4 +1,5 @@
-﻿using ItemListTemplate.Pagination;
+﻿using System.Linq.Expressions;
+using ItemListTemplate.Pagination;
 
 namespace ItemListTemplate.Repositories
 {
@@ -11,6 +12,10 @@ namespace ItemListTemplate.Repositories
         Task Update(T entity);
         Task Delete(T entity);
         Task SaveChangesAsync();
-        Task<PaginatedResult<T>> GetPagedAsync(PaginationParams pagingParams);
+        Task<PaginatedResult<T>> GetPagedAsync(
+            PaginationParams paging,
+            Expression<Func<T, bool>>? filter = null,
+            List<Expression<Func<T, object>>>? includes = null
+        );
     }
 }

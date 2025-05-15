@@ -16,12 +16,12 @@ namespace ItemListTemplate.Services
 
         public async Task<PaginatedResult<Item>> GetItems(PaginationParams request)
         {
-            var items = await _itemRepository.GetItems(request);
+            var items = await _itemRepository.GetPagedAsync(request);
             if (items == null)
             {
                 throw new Exception("No items found");
             }
-            return await _itemRepository.GetPagedAsync(request);
+            return items;
         }
     }
 }
