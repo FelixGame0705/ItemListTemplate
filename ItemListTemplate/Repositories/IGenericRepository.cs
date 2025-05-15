@@ -1,4 +1,6 @@
-﻿namespace ItemListTemplate.Repositories
+﻿using ItemListTemplate.Pagination;
+
+namespace ItemListTemplate.Repositories
 {
     public interface IGenericRepository<T>
         where T : class
@@ -9,5 +11,6 @@
         Task Update(T entity);
         Task Delete(T entity);
         Task SaveChangesAsync();
+        Task<PaginatedResult<T>> GetPagedAsync(PaginationParams pagingParams);
     }
 }

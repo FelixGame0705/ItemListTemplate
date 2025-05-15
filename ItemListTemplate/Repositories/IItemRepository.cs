@@ -1,5 +1,6 @@
 ﻿using ItemListTemplate.DTOs;
 using ItemListTemplate.Entities;
+using ItemListTemplate.Pagination;
 
 namespace ItemListTemplate.Repositories
 {

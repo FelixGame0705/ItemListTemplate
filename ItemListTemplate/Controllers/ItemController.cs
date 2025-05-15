@@ -1,4 +1,4 @@
-﻿using ItemListTemplate.DTOs;
+﻿using ItemListTemplate.Pagination;
 using ItemListTemplate.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -2,6 +2,7 @@
 using ItemListTemplate.DTOs;
 using ItemListTemplate.Entities;
 using ItemListTemplate.Models;
+using ItemListTemplate.Pagination;
 
 namespace ItemListTemplate.Repositories
 {
@@ -14,16 +15,16 @@ namespace ItemListTemplate.Repositories
         {
             var items = _dbSet.AsQueryable();
             items.OrderBy(x => x.Id);
-            if (!string.IsNullOrEmpty(request.sortBy))
+            if (!string.IsNullOrEmpty(request.SortBy))
             {
-                switch (request.sortBy)
+                switch (request.SortBy)
                 {
                     case "Name":
                         items = items.OrderBy(hh => hh.Name);
                         break;
                 }
             }
-            var result = PaginatedList<Item>.Create(items, request.pageNummber, request.pageSize);
+            var result = PaginatedList<Item>.Create(items, request.PageNumber, request.PageSize);
             return new ResponseItemsDto
             {
                 items = result,

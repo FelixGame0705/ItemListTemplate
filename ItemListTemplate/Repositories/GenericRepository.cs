@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ItemListTemplate.Pagination;
 using Microsoft.EntityFrameworkCore;
 
 namespace ItemListTemplate.Repositories
@@ -26,5 +27,32 @@ namespace ItemListTemplate.Repositories
         public async Task Delete(T entity) => _dbSet.Remove(entity);
 
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
+
+        public async Task<PaginatedResult<T>> GetPagedAsync(PaginationParams paging)
+        {
+            var query = _dbSet.AsQueryable();
+
+            // Optional: apply default sorting
+            if (!string.IsNullOrEmpty(paging.SortBy))
+            {
+                query = paging.IsDescending
+                    ? query.OrderByDescending(e => EF.Property<object>(e, paging.SortBy))
+                    : query.OrderBy(e => EF.Property<object>(e, paging.SortBy));
+            }
+
+            var count = await query.CountAsync();
+            var items = await query
+                .Skip((paging.PageNumber - 1) * paging.PageSize)
+                .Take(paging.PageSize)
+                .ToListAsync();
+
+            return new PaginatedResult<T>
+            {
+                Items = items,
+                PageIndex = paging.PageNumber,
+                PageSize = paging.PageSize,
+                TotalItems = count,
+            };
+        }
     }
 }
